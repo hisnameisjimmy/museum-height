@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Picture Hanging Guide</title>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jQuery CDN -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body class="m-4">
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Input Form Column -->
+        <div>
+            <div id="emptyState" class="italic mb-4">Add your first picture!</div>
+            <div id="inputForm" class="mb-4">
+                <input type="number" id="pictureHeight" placeholder="Picture Height (inches)" class="border p-2 mb-2">
+                <input type="number" id="pictureWidth" placeholder="Picture Width (inches)" class="border p-2 mb-2">
+                <input type="number" id="hangingNailHeight" placeholder="Hanging Nail Height (inches)"
+                    class="border p-2 mb-2">
+                <button id="addPictureBtn"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add/Edit
+                    Picture</button>
+            </div>
+            <div id="globalSettings">
+                <input type="number" id="wallWidth" placeholder="Wall Width (inches)" class="border p-2 mb-2">
+                <input type="number" id="distanceBetween" placeholder="Distance Between Pictures (inches)"
+                    class="border p-2 mb-2">
+            </div>
+        </div>
+
+        <!-- Picture Display Column -->
+        <div class="" id="pictureColumn">
+            <div id="pictureDisplay" class="flex flex-col justify-center items-center">
+                <!-- Pictures will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="errorMessage" class="text-red-500 mt-4"></div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let pictures = [];
+        let editingIndex = null;
+
+        $(document).ready(function () {
+            loadFromURL();
+            displayPictures();
+            adjustFormPosition();
+        });
+
+        function loadFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const numPictures = Math.max(...Array.from(params.keys()).map(key => parseInt(key.replace(/\D/g, '')) || 0));
+
+            for (let i = 0; i < numPictures; i++) {
+                const height = params.get(`picture${i + 1}Height`);
+                const width = params.get(`picture${i + 1}Width`);
+                const hangingNailHeight = params.get(`picture${i + 1}HangingNailHeight`);
+
+                if (height && width && hangingNailHeight) {
+                    pictures.push({
+                        height: parseInt(height),
+                        width: parseInt(width),
+                        hangingNailHeight: parseInt(hangingNailHeight)
+                    });
+                }
+            }
+
+            $("#wallWidth").val(params.get('wallWidth') || '');
+            $("#distanceBetween").val(params.get('distanceBetween') || '');
+        }
+
+        function adjustFormPosition() {
+            if (pictures.length === 0) {
+                $('#emptyState').show();
+                // $('#inputForm').css('position', 'static');
+            } else {
+                $('#emptyState').hide();
+                // $('#inputForm').css('position', 'absolute');
+            }
+        }
+
+
+        function calculateNailHeight(pictures, index) {
+            const museumHeight = 57; // Museum height in inches
+            const distanceBetween = parseInt($("#distanceBetween").val()) || 0;
+
+            // Total height of all pictures including spaces
+            let totalHeight = pictures.reduce((acc, pic) => acc + pic.height, 0) + (pictures.length - 1) * distanceBetween;
+
+            // Floor to bottom of the bottom painting
+            let floorToBottom = museumHeight - (totalHeight / 2);
+
+            // For the first painting (bottom-most), calculate directly
+            if (index === pictures.length - 1) {
+                return floorToBottom + (pictures[index].height - pictures[index].hangingNailHeight);
+            }
+
+            // For other paintings, add heights and distances of paintings below
+            let heightFromFloor = floorToBottom;
+            for (let i = pictures.length - 1; i > index; i--) {
+                heightFromFloor += pictures[i].height + distanceBetween;
+            }
+            heightFromFloor += pictures[index].height - pictures[index].hangingNailHeight;
+
+            return heightFromFloor;
+        }
+
+
+
+
+
+
+
+        function displayPictures() {
+            $('#pictureDisplay').empty();
+            let totalHeight = 0;
+            console.log(pictures);
+            pictures.forEach((picture, index) => {
+                const nailHeight = calculateNailHeight(pictures, index);
+
+                // prettier-ignore
+                const pictureElement = $(
+                    `<div class="relative mb-[${parseInt($("#distanceBetween").val()) * 5}px]">` +
+                        `<div class="relative shadow-lg group ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * 5}px; width: ${picture.width * 5}px;" data-index="${index}">` +
+                            `<div class="absolute top-[${(picture.hangingNailHeight * 5) - 4}px] text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-2 h-2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` + 
+                            `<div class="absolute bottom-2 text-xs text-slate-400">${picture.width}in</div>` +
+                            `<div class="absolute right-2 text-xs text-slate-400">${picture.height}in</div>` +
+                            `<div class="absolute transition ease-in-out duration-150 -top-2 -right-2 rounded-full cursor-pointer bg-slate-200 text-red-400 p-1 remove-btn invisible group-hover:visible hover:bg-red-400 hover:text-slate-100" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` +
+                        `</div>` +
+                        `<div class="absolute top-[${picture.hangingNailHeight * 5}px] left-[${(picture.width * 5) + 35}px]">` +
+                            `<div class="absolute -right-20 text-xs text-slate-400"><div>Nail Height</div><div>${nailHeight}in</div></div>` +
+                            `<div class="absolute right-0 border-r border-slate-300" style="height: ${nailHeight * 5}px;"></div>` +
+                        `</div>` +
+                    `</div>`
+                );
+                pictureElement.click(function (event) {
+                    if (event.target.classList.contains('remove-btn')) {
+                        removePicture($(event.target).data('index'));
+                    } else {
+                        console.log($(event.target).data('index'));
+                        editPicture($(event.target).data('index'));
+                    }
+                });
+                $('#pictureDisplay').append(pictureElement);
+                totalHeight += Math.min(picture.height, 200) + (index < pictures.length - 1 ? parseInt($("#distanceBetween").val()) : 0);
+            });
+
+            if (totalHeight > parseInt($("#wallWidth").val())) {
+                $('#errorMessage').text('Error: Pictures are too high to fit the wall.');
+            } else {
+                $('#errorMessage').text('');
+            }
+        }
+
+        $('#addPictureBtn').click(function () {
+            const picture = {
+                height: parseInt($("#pictureHeight").val()),
+                width: parseInt($("#pictureWidth").val()),
+                hangingNailHeight: parseInt($("#hangingNailHeight").val())
+            };
+            if (editingIndex !== null) {
+                pictures[editingIndex] = picture;
+                editingIndex = null;
+            } else {
+                pictures.push(picture);
+            }
+            displayPictures();
+            updateURL();
+        });
+
+        function editPicture(index) {
+            const picture = pictures[index];
+            $("#pictureHeight").val(picture.height);
+            $("#pictureWidth").val(picture.width);
+            $("#hangingNailHeight").val(picture.hangingNailHeight);
+            editingIndex = index;
+            const picturePosition = $('.picture').eq(index).position().top;
+            $('#inputForm').css('top', picturePosition);
+        }
+
+        function removePicture(index) {
+            pictures.splice(index, 1);
+            displayPictures();
+            updateURL();
+        }
+
+        function updateURL() {
+            let params = new URLSearchParams();
+            pictures.forEach((picture, index) => {
+                params.append(`picture${index + 1}Height`, picture.height);
+                params.append(`picture${index + 1}Width`, picture.width);
+                params.append(`picture${index + 1}HangingNailHeight`, picture.hangingNailHeight);
+            });
+            params.append('wallWidth', $("#wallWidth").val());
+            params.append('distanceBetween', $("#distanceBetween").val());
+            history.pushState(null, null, "?" + params.toString());
+        }
+    </script>
+</body>
+
+</html>
