@@ -8,34 +8,38 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Montserrat:ital,wght@0,300;0,500;0,700;0,900;1,700&display=swap" rel="stylesheet">
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&display=swap" rel="stylesheet"> -->
     <style>
-        body {font-family: 'Inter', sans-serif;}
+        /* body {font-family: 'Inter', sans-serif;} */
+        body {font-family: 'Montserrat', sans-serif;} 
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn ease-in 1;
+            animation-fill-mode: forwards;
+            animation-duration: .5s;
+            opacity: 0; /* Start with element invisible */
+        }
     </style>
 </head>
 
 <body class="m-4">
     <div class="grid grid-cols-2 gap-4">
         <!-- Input Form Column -->
-        <div class="w-8/12 mx-auto ">
+        <div class="w-6/12 mx-auto h-screen flex flex-col justify-center items-center">
             <div class="my-10">
-                <h1 class="text-7xl font-black text-slate-900 tracking-wide mb-6 w-5/12">Museum Height</h1>
+                <h1 class="text-7xl font-black text-slate-900 tracking-wide mb-6 w-5/12 uppser">Museum Height</h1>
                 <h2 class="text-3xl text-slate-400">Hang your art like the pros.</h2>
             </div>
             <div id="emptyState" class="italic mb-4">Add your first picture!</div>
-            
-            <div id="inputForm" class="mb-4 flex flex-col border p-10 shadow-xl">
-                <label class="text-sm font-bold text-slate-600" for="pictureHeight">Height</label>
-                <input type="number" id="pictureHeight" class="border p-1 mb-2">
-                <label class="text-sm font-bold text-slate-600" for="pictureWidth">Width</label>
-                <input type="number" id="pictureWidth" class="border p-1 mb-2">
-                <label class="text-sm font-bold text-slate-600" for="hangingNailHeight">Hang Point (height from top to hanging)</label>
-                <input type="number" id="hangingNailHeight" class="border p-1 mb-2">
-                <button id="addPictureBtn"
-                    class="bg-slate-900 hover:bg-slate-700 text-white font-bold py-2 px-4">Add</button>
-            </div>
         </div>
 
         <!-- Picture Display Column -->
@@ -44,17 +48,42 @@
             <div id="pictureDisplay" class="flex h-5/6 flex-col justify-center items-center">
                 <!-- Pictures will be displayed here -->
             </div>
+
+            <div id="inputForm" class="hidden absolute z-10 bg-white p-4 flex flex-col border p-10 shadow-xl">
+                <label class="text-sm font-semibold text-slate-600" for="pictureHeight">Height</label>
+                <input type="number" id="pictureHeight" class="border p-1 mb-2">
+                <label class="text-sm font-semibold text-slate-600" for="pictureWidth">Width</label>
+                <input type="number" id="pictureWidth" class="border p-1 mb-2">
+                <label class="text-sm font-semibold text-slate-600" for="hangingNailHeight">Hang Point (height from top to hanging)</label>
+                <input type="number" id="hangingNailHeight" class="border p-1 mb-2">
+                <div class="flex space-x-2 justify-end">
+                    <button id="cancelFormBtn" class="bg-slate-100 text-slate-800 border border-slate-300 hover:bg-red-500 hover:border-red-700 hover:text-white font-normal text-sm py-2 px-4 rounded mt-2">
+                        Cancel
+                    </button>
+                    <button id="addPictureBtn"
+                        class="bg-blue-700 text-slate-100 border border-blue-900 hover:bg-blue-500 hover:border-blue-900 hover:text-white font-normal text-sm py-2 px-4 rounded mt-2">Add</button>
+                </div>
+            </div>
+            
             <div id="errorMessage" class="text-red-500 text-center font-bold mt-4"></div>
-            <div id="globalSettings" class="mb-4 fixed bottom-0 flex space-x-4 w-10/12 mx-auto border p-3">
+            <div id="globalSettings" class="mb-4 fixed bottom-0 flex space-x-4 w-10/12 mx-auto border border-slate-100 p-3">
                 <div class="flex flex-col">
                     <label class="text-sm font-bold text-slate-600" for="wallWidth">Wall Width</label>
-                    <input type="number" id="wallWidth" placeholder="Wall Width (inches)" class="border p-1 mb-2">
+                    <input type="number" id="wallWidth" placeholder="Wall Width" class="border p-1 mb-2">
                 </div>
                 <div class="flex flex-col">
                     <label class="text-sm font-bold text-slate-600" for="distanceBetween">Distance Between Art</label>
-                    <input type="number" id="distanceBetween" placeholder="Distance Between Pictures (inches)"
+                    <input type="number" id="distanceBetween" placeholder="Distance Between Pictures"
                         class="border p-1 mb-2">
                 </div>
+                <div class="flex flex-col">
+                    <label class="text-sm font-bold text-slate-600" for="unit">Unit</label>
+                    <select class="text-sm border border-slate-200 h-[34px] px-4 pb-1 pt-2 text-slate-600" name="unit" id="unit">
+                        <option value="inches">Inches</option>
+                        <option value="centimeters">Centimeters</option>
+                    </select>
+                </div>
+                
                 <button id="updateGlobalSettingsBtn"
                     class="bg-slate-900 hover:bg-slate-700 text-white font-bold py-0 px-4">Update</button>
             </div>
@@ -64,12 +93,66 @@
     <!-- JavaScript Logic -->
     <script>
         let pictures = [];
+        let unitAbbreviated;
+        let unit;
         let editingIndex = null;
+        let multiplier;
+        let museumHeight;
+
 
         $(document).ready(function () {
             loadFromURL();
+            changeUnit();
             displayPictures();
             adjustFormPosition();
+        });
+
+        function changeUnit() {
+            unit = $('#unit').find(":selected").val();
+            if (typeof unit === 'undefined') {
+                $("#unit").val("inches");
+            }
+
+            if (unit == "inches") {
+                globalUnit = "in";
+                multiplier = 5;
+                museumHeight = 57; // Museum height in inches
+                unitAbbreviated = "in";
+            } else {
+                globalUnit = "cm";
+                multiplier = 2;
+                museumHeight = 144; // Museum height in centimeters
+                unitAbbreviated = "cm";
+            }
+            updateURL();
+        }
+
+        function setFormMode(isEditMode) {
+            if (isEditMode) {
+                $("#addPictureBtn").text("Edit");
+            } else {
+                $("#addPictureBtn").text("Add");
+                $("#pictureHeight").val('');
+                $("#pictureWidth").val('');
+                $("#hangingNailHeight").val('');
+                editingIndex = null;
+            }
+        }
+
+        function editPicture(index) {
+            const picture = pictures[index];
+            $("#pictureHeight").val(picture.height);
+            $("#pictureWidth").val(picture.width);
+            $("#hangingNailHeight").val(picture.hangingNailHeight);
+            editingIndex = index;
+            setFormMode(true); // Switch to edit mode
+        }
+
+
+
+        $('#unit').change(function(){
+            changeUnit();
+            displayPictures();
         });
 
         function loadFromURL() {
@@ -92,6 +175,7 @@
 
             $("#wallWidth").val(params.get('wallWidth') || '');
             $("#distanceBetween").val(params.get('distanceBetween') || '');
+            $("#unit").val(params.get('unit') || '');
         }
 
         function adjustFormPosition() {
@@ -106,7 +190,7 @@
 
 
         function calculateNailHeight(pictures, index) {
-            const museumHeight = 57; // Museum height in inches
+
             const distanceBetween = parseInt($("#distanceBetween").val()) || 0;
 
             // Total height of all pictures including spaces
@@ -139,37 +223,50 @@
         function displayPictures() {
             $('#pictureDisplay').empty();
             let totalHeight = 0;
-            console.log(pictures);
+
             pictures.forEach((picture, index) => {
                 const nailHeight = calculateNailHeight(pictures, index);
 
                 // prettier-ignore
                 const pictureElement = $(
-                    `<div class="relative mb-[${parseInt($("#distanceBetween").val()) * 5}px]">` +
-                        `<div class="relative shadow-lg group ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * 5}px; width: ${picture.width * 5}px;" data-index="${index}">` +
+                    `<div class="relative group mb-[${parseInt($("#distanceBetween").val()) * 5}px]">` +
+                        `<div class="relative shadow-lg ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * multiplier}px; width: ${picture.width * multiplier}px;" data-index="${index}">` +
                             `<div class="absolute top-[${(picture.hangingNailHeight * 5) - 4}px] text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-2 h-2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` + 
-                            `<div class="absolute bottom-2 text-xs text-slate-400">${picture.width}in</div>` +
-                            `<div class="absolute right-2 text-xs text-slate-400">${picture.height}in</div>` +
-                            `<div class="absolute transition ease-in-out duration-150 -top-2 -right-2 rounded-full cursor-pointer bg-slate-200 text-red-400 p-1 remove-btn invisible group-hover:visible hover:bg-red-400 hover:text-slate-100" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` +
+                            `<div class="absolute bottom-2 text-xs text-slate-400">${picture.width}${unitAbbreviated}</div>` +
+                            `<div class="absolute right-2 text-xs text-slate-400">${picture.height}${unitAbbreviated}</div>` +
+                            `<div class="absolute transition ease-in-out duration-150 -top-2 -right-2 rounded-full cursor-pointer bg-slate-200 text-red-400 p-1 js-remove-btn invisible group-hover:visible hover:bg-red-400 hover:text-slate-100" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` +
+                            `<div class="absolute transition ease-in-out duration-150 -top-2 -left-2 rounded-full cursor-pointer bg-slate-200 text-blue-400 p-2 js-edit-btn invisible group-hover:visible hover:bg-blue-400 hover:text-slate-100" data-index="${index}"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-3 h-3"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" /></svg></div>` +
                         `</div>` +
-                        `<div class="absolute top-[${picture.hangingNailHeight * 5}px] left-[${(picture.width * 5) + 35}px]">` +
-                            `<div class="absolute -right-20 text-xs bg-white p-2 opacity-60 text-slate-400"><div>Nail Height</div><div>${nailHeight}in</div></div>` +
-                            `<div class="absolute right-0 border-r border-slate-300" style="height: ${nailHeight * 5}px;"></div>` +
-                            `<div class="absolute top-0 -left-[300px] border-b border-slate-300" style="width: 400px; margin-top: ${nailHeight * 5}px;"></div>` +
+                        `<div class="absolute top-[${picture.hangingNailHeight * multiplier}px] left-[${(picture.width * multiplier) + 35}px]">` +
+                            `<div class="absolute -right-20 text-xs bg-white p-2 opacity-60 group-hover:opacity-100 text-slate-400"><div>Nail Height</div><div>${nailHeight}${unitAbbreviated}</div></div>` +
+                            `<div class="absolute right-0 border-r border-slate-300 group-hover:border-slate-900" style="height: ${nailHeight * multiplier}px;"></div>` +
+                            `<div class="absolute top-[${nailHeight * multiplier}px] -left-[350px] drop-shadow-md border-b border-slate-300" style="width: 400px;"></div>` +
                         `</div>` +
                     `</div>`
                 );
-                pictureElement.click(function (event) {
-                    if (event.target.classList.contains('remove-btn')) {
-                        removePicture($(event.target).data('index'));
-                    } else {
-                        console.log($(event.target).data('index'));
-                        editPicture($(event.target).data('index'));
-                    }
-                });
+
+                // Add the fade-in class and set a delay
+                pictureElement.addClass('fade-in');
+                pictureElement.css('animation-delay', `${index * 0.25}s`); // 0.5s delay between each element
+
                 $('#pictureDisplay').append(pictureElement);
                 totalHeight += Math.min(picture.height, 200) + (index < pictures.length - 1 ? parseInt($("#distanceBetween").val()) : 0);
             });
+
+            const addButton = $(
+                `<button id="addNewPictureBtn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full">` +
+                    `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">` +
+                        `<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />` +
+                    `</svg>` +                
+                `</button>`
+            );
+
+            const bottomBorder = $(
+                `<div class="absolute bottom-[200px] -left-[50px] transform translate-x-[100px] drop-shadow-md border-b border-slate-300" style="width: 400px;"></div>`
+            );
+
+            $('#pictureDisplay').append(addButton);
+            // $('#pictureDisplay').append(bottomBorder);
 
             if (totalHeight > 114) {
                 $('#errorMessage').text('Pictures are too high to fit the wall!');
@@ -182,22 +279,27 @@
             let height = parseInt($("#pictureHeight").val());
             let width = parseInt($("#pictureWidth").val());
             let hangingNailHeight = parseInt($("#hangingNailHeight").val());
+
             if (height && width && hangingNailHeight) {
-                const picture = {
-                    height,
-                    width,
-                    hangingNailHeight
-                };
+                const picture = { height, width, hangingNailHeight };
+
                 if (editingIndex !== null) {
                     pictures[editingIndex] = picture;
-                    editingIndex = null;
                 } else {
                     pictures.push(picture);
                 }
                 displayPictures();
                 updateURL();
+                setFormMode(false); // Switch back to add mode
+                $("#inputForm").removeAttr('style');
+                $("#inputForm").addClass('hidden');
             }
         });
+
+        $("#cancelEditBtn").click(function() {
+            setFormMode(false); // Switch back to add mode
+        });
+
 
         $('#wallWidth, #distanceBetween').keypress(function(event) {
             if (event.which == 13) { // Check if the pressed key is 'Enter'
@@ -208,9 +310,80 @@
 
         $('#updateGlobalSettingsBtn').click(updateGlobalSettings);
 
+        // pictureElement.on('click', '.js-remove-btn, .js-edit-btn', function(event) {
+        //             var $button = $(event.currentTarget); // Use currentTarget instead of target
+        //             var index = $button.data('index');
+
+        //             if ($button.hasClass('js-remove-btn')) {
+        //                 removePicture(index);
+        //             } else if ($button.hasClass('js-edit-btn')) {
+        //                 editPicture(index);
+        //             }
+        //         });
+
+
+        function showPopoverForm(isEditMode, position) {
+            // Set form values based on edit mode
+            if (isEditMode) {
+                const picture = pictures[editingIndex];
+                $("#pictureHeight").val(picture.height);
+                $("#pictureWidth").val(picture.width);
+                $("#hangingNailHeight").val(picture.hangingNailHeight);
+            } else {
+                $("#pictureHeight").val('');
+                $("#pictureWidth").val('');
+                $("#hangingNailHeight").val('');
+                editingIndex = null;
+            }
+            setFormMode(isEditMode);
+
+            // Show and position form
+            $("#inputForm").removeClass('hidden').css({
+                top: position.top,
+                left: position.left
+            });
+        }
+
+        $(".js-remove-btn").click(function(event) {
+            var $button = $(event.currentTarget); // Use currentTarget instead of target
+            var index = $button.data('index');
+            removePicture(index);
+        });
+
+        $(document).on('click', '.js-remove-btn', function() {
+            const index = $(this).data('index');
+            const buttonOffset = $(this).offset();
+            removePicture(index);
+        });
+
+        $(document).on('click', '.js-edit-btn', function() {
+            const index = $(this).data('index');
+            const buttonOffset = $(this).offset();
+            editingIndex = index;
+            showPopoverForm(true, buttonOffset);
+        });
+
+        $(document).on('click', '#addNewPictureBtn', function() {
+            const buttonOffset = $(this).offset();
+            showPopoverForm(false, { top: buttonOffset.top - 300, left: 200 });
+        });
+
+        $(document).click(function(event) {
+            if (!$(event.target).closest('#inputForm, .js-edit-btn, #addNewPictureBtn').length) {
+                $("#inputForm").addClass("hidden");
+            }
+        });
+
+        $("#cancelFormBtn").click(function() {
+            $("#inputForm").addClass("hidden");
+        });
+
+
+
         function updateGlobalSettings() {
             let wallWidth = parseInt($("#wallWidth").val());
             let spaceBetween = parseInt($("#spaceBetween").val());
+            let unit = parseInt($("#unit").val());
                 displayPictures();
                 updateURL();
         };
@@ -221,8 +394,6 @@
             $("#pictureWidth").val(picture.width);
             $("#hangingNailHeight").val(picture.hangingNailHeight);
             editingIndex = index;
-            const picturePosition = $('.picture').eq(index).position().top;
-            $('#inputForm').css('top', picturePosition);
         }
 
         function removePicture(index) {
@@ -240,6 +411,7 @@
             });
             params.append('wallWidth', $("#wallWidth").val());
             params.append('distanceBetween', $("#distanceBetween").val());
+            params.append('unit', $("#unit").val());
             history.pushState(null, null, "?" + params.toString());
         }
     </script>
