@@ -3,12 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Picture Hanging Guide</title>
+    <title>Museum Height</title>
+    <meta name="description" content="Hang art in your home at museum height quickly and easily">
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jQuery CDN -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&family=Montserrat:ital,wght@0,300;0,500;0,700;0,900;1,700&display=swap" rel="stylesheet">
@@ -36,28 +37,30 @@
         <!-- Input Form Column -->
         <div class="w-6/12 mx-auto h-screen flex flex-col justify-center items-center">
             <div class="my-10">
-                <h1 class="text-7xl font-black text-slate-900 tracking-wide mb-6 w-5/12 uppser">Museum Height</h1>
-                <h2 class="text-3xl text-slate-400">Hang your art like the pros.</h2>
+                <h1 class="text-6xl font-semibold text-slate-900 tracking-wide mb-6 w-5/12">Museum Height</h1>
+                <h2 class="text-2xl text-slate-400">Hang your art like the pros</h2>
+                <p class="text-slate-700 mt-4">Museum Height is the practice of hanging art on your wall so that its center line is at eye level or 57 inches (144cm). This makes it so when your eyes scan the room, every piece of art looks in harmony, similar to a museum. <a class="underline text-blue-400" href="https://www.apartmenttherapy.com/how-to-hang-artwork-properly-57-inches-from-the-floor-6174">Learn More</a> </p>
+                <p class="text-slate-700 mt-4">Please enjoy the app, and let me know what you think by emailing me at hisnameisjimmy@gmail.com</p>
             </div>
-            <div id="emptyState" class="italic mb-4">Add your first picture!</div>
         </div>
 
         <!-- Picture Display Column -->
-        <div class="h-screen relative" id="pictureColumn">
-            
-            <div id="pictureDisplay" class="flex h-5/6 flex-col justify-center items-center">
+        <div class="relative flex flex-col justify-center items-center" id="pictureColumn">
+            <div id="pictureDisplay" class="relative flex flex-col w-full justify-center items-center border-b border-slate-300">
                 <!-- Pictures will be displayed here -->
             </div>
+            <div class="w-full drop-shadow-lg h-[1px] bg-white"></div>
 
             <div id="inputForm" class="hidden absolute z-10 bg-white p-4 flex flex-col border p-10 shadow-xl">
-                <label class="text-sm font-semibold text-slate-600" for="pictureHeight">Height</label>
-                <input type="number" id="pictureHeight" class="border p-1 mb-2">
                 <label class="text-sm font-semibold text-slate-600" for="pictureWidth">Width</label>
                 <input type="number" id="pictureWidth" class="border p-1 mb-2">
-                <label class="text-sm font-semibold text-slate-600" for="hangingNailHeight">Hang Point (height from top to hanging)</label>
+                <label class="text-sm font-semibold text-slate-600" for="pictureHeight">Height</label>
+                <input type="number" id="pictureHeight" class="border p-1 mb-2">
+                <label class="text-sm font-semibold text-slate-600" for="hangingNailHeight">Hang Point <span id="hangPoint" class="group relative"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline text-slate-400"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM8.94 6.94a.75.75 0 1 1-1.061-1.061 3 3 0 1 1 2.871 5.026v.345a.75.75 0 0 1-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 1 0 8.94 6.94ZM10 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" /></svg>
+                  <span class="hidden group-hover:block absolute bg-slate-900 text-xs text-slate-100 rounded-md font-normal p-2">Distance from the top of the art to the stretched wire</span></span></label>
                 <input type="number" id="hangingNailHeight" class="border p-1 mb-2">
                 <div class="flex space-x-2 justify-end">
-                    <button id="cancelFormBtn" class="bg-slate-100 text-slate-800 border border-slate-300 hover:bg-red-500 hover:border-red-700 hover:text-white font-normal text-sm py-2 px-4 rounded mt-2">
+                    <button id="cancelFormBtn" class="bg-slate-100 text-slate-800 border border-slate-300 hover:bg-slate-300 hover:border-slate-400 font-normal text-sm py-2 px-4 rounded mt-2">
                         Cancel
                     </button>
                     <button id="addPictureBtn"
@@ -66,26 +69,27 @@
             </div>
             
             <div id="errorMessage" class="text-red-500 text-center font-bold mt-4"></div>
-            <div id="globalSettings" class="mb-4 fixed bottom-0 flex space-x-4 w-10/12 mx-auto border border-slate-100 p-3">
-                <div class="flex flex-col">
+            <div id="globalSettings" class="mb-4 bottom-0 flex justify-center mx-auto items-end space-x-4 p-3">
+                <!-- <div class="flex flex-col w-[120px]">
                     <label class="text-sm font-bold text-slate-600" for="wallWidth">Wall Width</label>
-                    <input type="number" id="wallWidth" placeholder="Wall Width" class="border p-1 mb-2">
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-sm font-bold text-slate-600" for="distanceBetween">Distance Between Art</label>
-                    <input type="number" id="distanceBetween" placeholder="Distance Between Pictures"
+                    <input type="number" id="wallWidth" class="border p-1 mb-2">
+                </div> -->
+                <div class="flex flex-col w-[160px]">
+                    <label class="text-sm font-bold text-slate-600" for="distanceBetween">Space Between <span id="hangPoint" class="group relative"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 inline text-slate-400"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM8.94 6.94a.75.75 0 1 1-1.061-1.061 3 3 0 1 1 2.871 5.026v.345a.75.75 0 0 1-1.5 0v-.5c0-.72.57-1.172 1.081-1.287A1.5 1.5 0 1 0 8.94 6.94ZM10 15a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" /></svg>
+                        <span class="hidden group-hover:block absolute bg-slate-900 text-xs text-slate-100 rounded-md font-normal p-2">Vertical Space Between Art</span></span></label>
+                    <input type="number" id="distanceBetween"
                         class="border p-1 mb-2">
                 </div>
-                <div class="flex flex-col">
+                <div class="flex flex-col w-[140px] -mt-1.5">
                     <label class="text-sm font-bold text-slate-600" for="unit">Unit</label>
                     <select class="text-sm border border-slate-200 h-[34px] px-4 pb-1 pt-2 text-slate-600" name="unit" id="unit">
-                        <option value="inches">Inches</option>
+                        <option selected value="inches">Inches</option>
                         <option value="centimeters">Centimeters</option>
                     </select>
                 </div>
                 
                 <button id="updateGlobalSettingsBtn"
-                    class="bg-slate-900 hover:bg-slate-700 text-white font-bold py-0 px-4">Update</button>
+                    class="bg-slate-900 hover:bg-slate-700 text-white font-bold px-4 h-9">Update</button>
             </div>
         </div>
     </div>
@@ -94,10 +98,12 @@
     <script>
         let pictures = [];
         let unitAbbreviated;
-        let unit;
+        let unit = "inches";
         let editingIndex = null;
         let multiplier;
         let museumHeight;
+        let wallWidth;
+        let mouseDownInsidePopover = false;
 
 
         $(document).ready(function () {
@@ -110,7 +116,7 @@
         function changeUnit() {
             unit = $('#unit').find(":selected").val();
             if (typeof unit === 'undefined') {
-                $("#unit").val("inches");
+                unit = "inches";
             }
 
             if (unit == "inches") {
@@ -118,11 +124,13 @@
                 multiplier = 5;
                 museumHeight = 57; // Museum height in inches
                 unitAbbreviated = "in";
+                $('#pictureDisplay').addClass(`h-[${(museumHeight * 2) * multiplier}px]`)
             } else {
                 globalUnit = "cm";
                 multiplier = 2;
                 museumHeight = 144; // Museum height in centimeters
                 unitAbbreviated = "cm";
+                $('#pictureDisplay').addClass(`h-[${(museumHeight * 2) * multiplier}px]`)
             }
             updateURL();
         }
@@ -214,22 +222,22 @@
             return heightFromFloor;
         }
 
-
-
-
-
-
-
         function displayPictures() {
             $('#pictureDisplay').empty();
             let totalHeight = 0;
 
             pictures.forEach((picture, index) => {
                 const nailHeight = calculateNailHeight(pictures, index);
+                
+                // Determine if the current picture is the last one in the array
+                const isLastPicture = index === pictures.length - 1;
+
+                // Adjust the margin-bottom class based on whether it's the last picture or not
+                const marginBottomClass = isLastPicture ? "" : `mb-[${parseInt($("#distanceBetween").val()) * multiplier}px]`;
 
                 // prettier-ignore
                 const pictureElement = $(
-                    `<div class="relative group mb-[${parseInt($("#distanceBetween").val()) * 5}px]">` +
+                    `<div class="relative group ${marginBottomClass}">` +
                         `<div class="relative shadow-lg ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * multiplier}px; width: ${picture.width * multiplier}px;" data-index="${index}">` +
                             `<div class="absolute top-[${(picture.hangingNailHeight * 5) - 4}px] text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-2 h-2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` + 
                             `<div class="absolute bottom-2 text-xs text-slate-400">${picture.width}${unitAbbreviated}</div>` +
@@ -240,7 +248,6 @@
                         `<div class="absolute top-[${picture.hangingNailHeight * multiplier}px] left-[${(picture.width * multiplier) + 35}px]">` +
                             `<div class="absolute -right-20 text-xs bg-white p-2 opacity-60 group-hover:opacity-100 text-slate-400"><div>Nail Height</div><div>${nailHeight}${unitAbbreviated}</div></div>` +
                             `<div class="absolute right-0 border-r border-slate-300 group-hover:border-slate-900" style="height: ${nailHeight * multiplier}px;"></div>` +
-                            `<div class="absolute top-[${nailHeight * multiplier}px] -left-[350px] drop-shadow-md border-b border-slate-300" style="width: 400px;"></div>` +
                         `</div>` +
                     `</div>`
                 );
@@ -252,13 +259,22 @@
                 $('#pictureDisplay').append(pictureElement);
                 totalHeight += Math.min(picture.height, 200) + (index < pictures.length - 1 ? parseInt($("#distanceBetween").val()) : 0);
             });
-
+            console.log(`Museum Height: ${museumHeight}`);
+            console.log(`Multiplier: ${multiplier}`);
+            console.log(`Total Height: ${totalHeight}`);
+            console.log(`Calculation: ${(((museumHeight * 2) * multiplier) / 2) + ((totalHeight * multiplier) / 2)}`);
             const addButton = $(
-                `<button id="addNewPictureBtn" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full">` +
-                    `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">` +
-                        `<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />` +
-                    `</svg>` +                
-                `</button>`
+                `<div id="addNewPictureBtn" class="flex flex-col justify-center items-center absolute top-[${(((museumHeight * 2) * multiplier) / 2) + ((totalHeight * multiplier) / 2) + 12}px]">` +
+                    `<button id=""  class="h-10 w-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full">` +
+                        `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">` +
+                            `<path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />` +
+                        `</svg>` +                
+                    `</button>` +
+                `<div>`
+            );
+
+            const emptyState = $(
+                `<div id="emptyState" class="font-light text-slate-400 text-sm mt-2">Add Art</div>`
             );
 
             const bottomBorder = $(
@@ -266,7 +282,20 @@
             );
 
             $('#pictureDisplay').append(addButton);
-            // $('#pictureDisplay').append(bottomBorder);
+
+            if (pictures.length === 0) {
+                $('#addNewPictureBtn').append(emptyState);
+            }
+
+            const wallWidthTick = $(
+                `<div class="w-1 h-2 bg-slate-700"></div>`
+            );
+
+            // $('#pictureDisplay').append(wallWidthTick);
+
+            // if (typeof wallWidth != 'undefined') {
+            //     $('#pictureDisplay').append(wallWidthTick);
+            // }
 
             if (totalHeight > 114) {
                 $('#errorMessage').text('Pictures are too high to fit the wall!');
@@ -310,16 +339,23 @@
 
         $('#updateGlobalSettingsBtn').click(updateGlobalSettings);
 
-        // pictureElement.on('click', '.js-remove-btn, .js-edit-btn', function(event) {
-        //             var $button = $(event.currentTarget); // Use currentTarget instead of target
-        //             var index = $button.data('index');
+        $(document).ready(function() {
+            $('#inputForm').on('mousedown', function() {
+                mouseDownInsidePopover = true;
+                console.log(`Mouse Down: ${mouseDownInsidePopover}`);
+            });
+            
 
-        //             if ($button.hasClass('js-remove-btn')) {
-        //                 removePicture(index);
-        //             } else if ($button.hasClass('js-edit-btn')) {
-        //                 editPicture(index);
-        //             }
-        //         });
+            $(document).on('mouseup', function(event) {
+                console.log(`Mouse Up: ${mouseDownInsidePopover}`);
+                if (!$(event.target).closest('#inputForm').length && mouseDownInsidePopover) {
+                    mouseDownInsidePopover = false; // Reset the flag
+                    event.stopPropagation(); // Prevent further propagation of the current event
+                } else {
+                    mouseDownInsidePopover = false; // Reset the flag
+                }
+            });
+        });
 
 
         function showPopoverForm(isEditMode, position) {
@@ -337,10 +373,19 @@
             }
             setFormMode(isEditMode);
 
+            const containerWidth = $('#pictureDisplay').width();
+
             // Show and position form
             $("#inputForm").removeClass('hidden').css({
                 top: position.top,
-                left: position.left
+                left: (containerWidth / 2) - 115
+            });
+
+            $('#pictureHeight, #pictureWidth, #hangingNailHeight').keypress(function(event) {
+                if (event.which == 13) { // Check if the pressed key is 'Enter'
+                    event.preventDefault(); // Prevent the default action (form submission)
+                    $('#addPictureBtn').click();
+                }
             });
         }
 
@@ -365,14 +410,16 @@
 
         $(document).on('click', '#addNewPictureBtn', function() {
             const buttonOffset = $(this).offset();
-            showPopoverForm(false, { top: buttonOffset.top - 300, left: 200 });
+            const containerWidth = $('#pictureDisplay').width();
+            showPopoverForm(false, { top: buttonOffset.top - 300, left: (containerWidth / 2) - 165 });
         });
 
         $(document).click(function(event) {
-            if (!$(event.target).closest('#inputForm, .js-edit-btn, #addNewPictureBtn').length) {
+            if (!$(event.target).closest('#inputForm, .js-edit-btn, #addNewPictureBtn').length && !mouseDownInsidePopover) {
                 $("#inputForm").addClass("hidden");
             }
         });
+
 
         $("#cancelFormBtn").click(function() {
             $("#inputForm").addClass("hidden");
@@ -384,8 +431,8 @@
             let wallWidth = parseInt($("#wallWidth").val());
             let spaceBetween = parseInt($("#spaceBetween").val());
             let unit = parseInt($("#unit").val());
-                displayPictures();
-                updateURL();
+            displayPictures();
+            updateURL();
         };
 
         function editPicture(index) {
