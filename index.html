@@ -490,7 +490,7 @@
                 params.append(`picture${index + 1}Width`, picture.width);
                 params.append(`picture${index + 1}HangingNailHeight`, picture.hangingNailHeight);
             });
-            params.append('wallWidth', $("#wallWidth").val());
+            // params.append('wallWidth', $("#wallWidth").val());
             params.append('distanceBetween', $("#distanceBetween").val());
             params.append('unit', $("#unit").val());
             history.pushState(null, null, "?" + params.toString());
