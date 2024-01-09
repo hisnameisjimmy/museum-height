@@ -272,7 +272,7 @@
                 // prettier-ignore
                 const pictureElement = $(
                     `<div class="relative group ${marginBottomClass}">` +
-                        `<div class="relative shadow-lg ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * multiplier}px; width: ${picture.width * multiplier}px;" data-index="${index}">` +
+                        `<div class="relative transition ease-in-out duration-150 shadow-lg group-hover:shadow-xl ring-4 ring-black ring-inset bg-slate-200 flex justify-center items-center" style="height: ${picture.height * multiplier}px; width: ${picture.width * multiplier}px;" data-index="${index}">` +
                             `<div class="absolute top-[${(picture.hangingNailHeight * 5) - 4}px] text-slate-800"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-2 h-2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" /></svg></div>` + 
                             `<div class="absolute bottom-2 text-xs text-slate-400">${picture.width}${unitAbbreviated}</div>` +
                             `<div class="absolute right-2 text-xs text-slate-400">${picture.height}${unitAbbreviated}</div>` +
