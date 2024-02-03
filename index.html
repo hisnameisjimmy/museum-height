@@ -151,13 +151,13 @@
 
             if (unit == "inches") {
                 globalUnit = "in";
-                multiplier = 5;
+                multiplier = 6;
                 museumHeight = 57; // Museum height in inches
                 unitAbbreviated = "in";
                 $('#pictureDisplay').addClass(`h-[${(museumHeight * 2) * multiplier}px]`)
             } else {
                 globalUnit = "cm";
-                multiplier = 2;
+                multiplier = 2.25;
                 museumHeight = 144; // Museum height in centimeters
                 unitAbbreviated = "cm";
                 $('#pictureDisplay').addClass(`h-[${(museumHeight * 2) * multiplier}px]`)
@@ -199,7 +199,7 @@
 
         function loadFromURL() {
             const params = new URLSearchParams(window.location.search);
-            const numPictures = Math.max(...Array.from(params.keys()).map(key => parseInt(key.replace(/\D/g, '')) || 0));
+            const numPictures = Math.max(...Array.from(params.keys()).map(key => parseFloat(key.replace(/\D/g, '')) || 0));
 
             for (let i = 0; i < numPictures; i++) {
                 const height = params.get(`picture${i + 1}Height`);
@@ -208,9 +208,9 @@
 
                 if (height && width && hangingNailHeight) {
                     pictures.push({
-                        height: parseInt(height),
-                        width: parseInt(width),
-                        hangingNailHeight: parseInt(hangingNailHeight)
+                        height: parseFloat(height),
+                        width: parseFloat(width),
+                        hangingNailHeight: parseFloat(hangingNailHeight)
                     });
                 }
             }
@@ -233,7 +233,7 @@
 
         function calculateNailHeight(pictures, index) {
 
-            const distanceBetween = parseInt($("#distanceBetween").val()) || 0;
+            const distanceBetween = parseFloat($("#distanceBetween").val()) || 0;
 
             // Total height of all pictures including spaces
             let totalHeight = pictures.reduce((acc, pic) => acc + pic.height, 0) + (pictures.length - 1) * distanceBetween;
@@ -267,7 +267,7 @@
                 const isLastPicture = index === pictures.length - 1;
 
                 // Adjust the margin-bottom class based on whether it's the last picture or not
-                const marginBottomClass = isLastPicture ? "" : `mb-[${parseInt($("#distanceBetween").val()) * multiplier}px]`;
+                const marginBottomClass = isLastPicture ? "" : `mb-[${parseFloat($("#distanceBetween").val()) * multiplier}px]`;
 
                 // prettier-ignore
                 const pictureElement = $(
@@ -291,7 +291,7 @@
                 pictureElement.css('animation-delay', `${index * 0.25}s`); // 0.5s delay between each element
 
                 $('#pictureDisplay').append(pictureElement);
-                totalHeight += Math.min(picture.height, 200) + (index < pictures.length - 1 ? parseInt($("#distanceBetween").val()) : 0);
+                totalHeight += Math.min(picture.height, 200) + (index < pictures.length - 1 ? parseFloat($("#distanceBetween").val()) : 0);
             });
             console.log(`Museum Height: ${museumHeight}`);
             console.log(`Multiplier: ${multiplier}`);
@@ -339,9 +339,9 @@
         }
 
         $('#addPictureBtn').click(function () {
-            let height = parseInt($("#pictureHeight").val());
-            let width = parseInt($("#pictureWidth").val());
-            let hangingNailHeight = parseInt($("#hangingNailHeight").val());
+            let height = parseFloat($("#pictureHeight").val());
+            let width = parseFloat($("#pictureWidth").val());
+            let hangingNailHeight = parseFloat($("#hangingNailHeight").val());
 
             if (height && width && hangingNailHeight) {
                 const picture = { height, width, hangingNailHeight };
@@ -480,9 +480,9 @@
 
 
         function updateGlobalSettings() {
-            let wallWidth = parseInt($("#wallWidth").val());
-            let spaceBetween = parseInt($("#spaceBetween").val());
-            let unit = parseInt($("#unit").val());
+            let wallWidth = parseFloat($("#wallWidth").val());
+            let spaceBetween = parseFloat($("#spaceBetween").val());
+            let unit = parseFloat($("#unit").val());
 
             const windowWidth = $(window).width();
             if (windowWidth < 768) {
