@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{ title or site.title }}</title>
+  <meta name="description" content="{{ description or site.description }}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ title or site.title }}">
+  <meta property="og:description" content="{{ description or site.description }}">
+  <meta property="og:url" content="{{ site.url }}{{ page.url }}">
+  <meta property="og:image" content="{{ site.url }}{{ ogImage or '/opengraph.png' }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ title or site.title }}">
+  <meta name="twitter:description" content="{{ description or site.description }}">
+  <meta name="twitter:image" content="{{ site.url }}{{ ogImage or '/opengraph.png' }}">
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body class="h-dvh">
+    <div class="grid grid-cols-1 gap-4 mx-auto bg-slate-950 text-md text-slate-400">
+        <div class="md:w-3/5 p-4 md:p-20">
+            <a class="hover:underline text-orange-400 text-xl md:text-2xl font-semibold" href="/">&larr; Back to the App</a>
+            <article class="prose prose-invert prose-slate max-w-none mt-6">
+                {% block content %}{{ content | safe }}{% endblock %}
+            </article>
+        </div>
+    </div>
+</body>
+</html>
