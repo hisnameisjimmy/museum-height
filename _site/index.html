@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>Museum Height</title>
     <meta name="description" content="Hang art in your home at a museum height of 57 inches (144cm) without doing math">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 
 
     <!-- Open Graph / Facebook -->
@@ -52,6 +52,16 @@
             animation-fill-mode: forwards;
             animation-duration: .5s;
             opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            #inputForm {
+                position: fixed !important; */
+                left: 0;
+                right: 0;
+                z-index: 9999;
+                padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+            }
         }
     </style>
 </head>
