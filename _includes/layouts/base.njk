@@ -13,6 +13,7 @@
   <meta name="twitter:title" content="{{ title or site.title }}">
   <meta name="twitter:description" content="{{ description or site.description }}">
   <meta name="twitter:image" content="{{ site.url }}{{ ogImage or '/opengraph.png' }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp,container-queries"></script>
 
@@ -22,7 +23,7 @@
 </head>
 <body class="h-dvh">
     <div class="grid grid-cols-1 gap-4 mx-auto bg-slate-950 text-md text-slate-400">
-        <div class="md:w-3/5 p-4 md:p-20">
+        <div class="w-full md:w-3/5 p-4 md:p-20">
             <a class="hover:underline text-orange-400 text-xl md:text-2xl font-semibold" href="/">&larr; Back to the App</a>
             <article class="prose prose-invert prose-slate max-w-none mt-6">
                 {% block content %}{{ content | safe }}{% endblock %}
