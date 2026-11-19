@@ -6,6 +6,7 @@
     <title>Museum Height</title>
     <meta name="description" content="Hang art in your home at a museum height of 57 inches (144cm) without doing math">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+    <link rel="service-doc" href="/api/">
 
 
     <!-- Open Graph / Facebook -->
@@ -100,6 +101,7 @@
                 <p class="hidden md:block text-slate-500 mt-4">
                     Museum Height is the practice of hanging art on your wall so that its center line is at eye level or 57 inches (144cm). This makes it so when your eyes scan the room, every piece of art looks in harmony, similar to a museum. 
                     <a class="hover:underline text-orange-400" href="/faq">Read the FAQ</a>.
+                    <a class="hover:underline text-orange-400" href="/api/">Layout API</a>.
                 </p>
                 <p class="hidden md:block text-slate-500 mt-4">
                     Please enjoy the app, and let me know how much you like it at <a class="hover:underline text-orange-400" href="https://www.jimmyhooker.com">jimmyhooker dot com</a>. I desperately need validation.
@@ -158,7 +160,9 @@
     </div>
 
     <!-- JavaScript Logic -->
-    <script>
+    <script type="module">
+        import { calculateLayout, centerlineHeights, defaultDistanceBetween, layoutParams, rounded } from '/layout.mjs';
+
         let pictures = [];
         let unit = "inches";
         let editingIndex = null;
@@ -276,13 +280,12 @@
 
             if (unit === "inches") {
                 multiplier = 6;
-                museumHeight = 57; // Museum height in inches
                 unitAbbreviated = "in";
             } else {
                 multiplier = 2.25;
-                museumHeight = 144; // Museum height in centimeters
                 unitAbbreviated = "cm";
             }
+            museumHeight = centerlineHeights[unit];
             $('#pictureDisplay').addClass(`h-[${museumHeight * 2 * multiplier}px]`);
             updateURL();
         }
@@ -329,7 +332,7 @@
             }
 
             $("#wallWidth").val(params.get('wallWidth') || '');
-            $("#distanceBetween").val(params.get('distanceBetween') || '4');
+            $("#distanceBetween").val(params.get('distanceBetween') || defaultDistanceBetween);
             $("#unit").val(params.get('unit') || '');
         }
 
@@ -341,35 +344,14 @@
             }
         }
 
-        function calculateNailHeight(pictures, index) {
-            const distanceBetween = rounded(parseFloat($("#distanceBetween").val())) || 0;
-
-            let totalHeight = pictures.reduce((acc, pic) => acc + pic.height, 0) + (pictures.length - 1) * distanceBetween;
-            let floorToBottom = museumHeight - (totalHeight / 2);
-
-            if (index === pictures.length - 1) {
-                return floorToBottom + (pictures[index].height - pictures[index].hangingNailHeight);
-            }
-
-            let heightFromFloor = floorToBottom;
-            for (let i = pictures.length - 1; i > index; i--) {
-                heightFromFloor += pictures[i].height + distanceBetween;
-            }
-            heightFromFloor += pictures[index].height - pictures[index].hangingNailHeight;
-
-            return heightFromFloor;
-        }
-
-        function rounded(number) {
-            return Math.round(number * 100) / 100;
-        }
-
         function displayPictures() {
             $('#pictureDisplay').empty();
+            const distanceBetween = rounded(parseFloat($("#distanceBetween").val())) || 0;
+            const { nailHeights } = calculateLayout(pictures, distanceBetween, museumHeight);
             let totalHeight = 0;
 
             pictures.forEach((picture, index) => {
-                let nailHeight = rounded(calculateNailHeight(pictures, index));
+                const nailHeight = nailHeights[index];
                 const isLastPicture = index === pictures.length - 1;
                 const marginBottomClass = isLastPicture ? "" : `mb-[${rounded(parseFloat($("#distanceBetween").val())) * multiplier}px]`;
 
@@ -437,7 +419,7 @@
             let width = rounded(parseFloat($("#pictureWidth").val()));
             let hangingNailHeight = rounded(parseFloat($("#hangingNailHeight").val()));
 
-            if (height && width && hangingNailHeight) {
+            if (height && width && Number.isFinite(hangingNailHeight)) {
                 const picture = { height, width, hangingNailHeight };
 
                 if (editingIndex !== null) {
@@ -562,14 +544,7 @@
         }
 
         function updateURL() {
-            let params = new URLSearchParams();
-            pictures.forEach((picture, index) => {
-                params.append(`picture${index + 1}Height`, picture.height);
-                params.append(`picture${index + 1}Width`, picture.width);
-                params.append(`picture${index + 1}HangingNailHeight`, picture.hangingNailHeight);
-            });
-            params.append('distanceBetween', $("#distanceBetween").val());
-            params.append('unit', $("#unit").val());
+            const params = layoutParams(pictures, $("#distanceBetween").val(), $("#unit").val());
             history.pushState(null, null, "?" + params.toString());
         }
 

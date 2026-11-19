@@ -7,8 +7,14 @@ frontend:
     build:
       commands:
         - npm run build
+        - mkdir -p .amplify-hosting/static .amplify-hosting/compute/default/_data .amplify-hosting/compute/default/public
+        - cp -R _site/. .amplify-hosting/static/
+        - cp amplify-deploy-manifest.json .amplify-hosting/deploy-manifest.json
+        - cp amplify-server.mjs worker.mjs .amplify-hosting/compute/default/
+        - cp _data/site.json .amplify-hosting/compute/default/_data/
+        - cp public/layout.mjs .amplify-hosting/compute/default/public/
   artifacts:
-    baseDirectory: _site
+    baseDirectory: .amplify-hosting
     files:
       - '**/*'
   cache:

@@ -1,7 +1,9 @@
 {
     "name": "museum-height",
+    "main": "./worker.mjs",
     "compatibility_date": "2025-08-14",
     "assets": {
-        "directory": "./_site"
-      }
-  }
+        "directory": "./_site",
+        "binding": "ASSETS"
+    }
+}
