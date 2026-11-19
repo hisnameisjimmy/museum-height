@@ -1,0 +1,15 @@
+# Museum Height
+
+> Museum Height is a picture-hanging calculator for one frame or a vertical stack of frames. It calculates nail heights from the floor so the frame or stack is centered at 57 inches or 144 centimeters.
+
+The public Layout API accepts GET requests at `/api/layout` without an API key. Pass each frame's height and the distance down from its top to the hanging point. Number frames from top to bottom. The JSON response includes the nail heights in that order and a shareable planner URL when every frame's width is supplied.
+
+## Layout API
+
+- [Layout API documentation](https://museumheight.com/api/): Query parameters, units, response fields, and a worked two-frame example.
+- [Live two-frame API example](https://museumheight.com/api/layout?picture1Height=24&picture1HangingNailHeight=2&picture1Width=18&picture2Height=18&picture2HangingNailHeight=3&picture2Width=14&distanceBetween=4&unit=inches): Returns nail heights of 78 and 49 inches for two stacked frames.
+
+## Picture hanging
+
+- [Museum Height planner](https://museumheight.com/): Enter frame dimensions and hanging points to visualize a layout and find the nail heights.
+- [Picture-hanging FAQ](https://museumheight.com/faq/): Explains the 57-inch rule, how to measure a hanging point, and how to calculate nail heights by hand.

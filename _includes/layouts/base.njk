@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <title>{{ title or site.title }}</title>
   <meta name="description" content="{{ description or site.description }}">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <link rel="describedby" href="/llms.txt">
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ title or site.title }}">
   <meta property="og:description" content="{{ description or site.description }}">

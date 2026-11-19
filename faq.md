@@ -87,3 +87,5 @@ So, this is doable! But kind of a hassle. I used to use a spreadsheet for this. 
 Yeah! Terrible. I did it a handful of times before I created a spreadsheet. I then thought it would be cool to make this app.
 
 You're welcome.
+
+If you're calculating nail heights from code, see the [Layout API documentation](/api/) for the request parameters and a worked example.
