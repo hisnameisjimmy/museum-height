@@ -5,6 +5,30 @@ export function rounded(number) {
     return Math.round(number * 100) / 100;
 }
 
+export function formatNailHeight(height, unit) {
+    if (unit === 'centimeters') {
+        return `${height} cm`;
+    }
+
+    const sixteenths = Math.round(Math.abs(height) * 16);
+    const whole = Math.floor(sixteenths / 16);
+    let numerator = sixteenths % 16;
+    let denominator = 16;
+    const sign = height < 0 && sixteenths > 0 ? '-' : '';
+
+    if (numerator === 0) {
+        return `${sign}${whole} in`;
+    }
+
+    while (numerator % 2 === 0) {
+        numerator /= 2;
+        denominator /= 2;
+    }
+
+    const fraction = `${numerator}/${denominator}`;
+    return `${sign}${whole ? `${whole} ` : ''}${fraction} in`;
+}
+
 export function calculateLayout(pictures, distanceBetween, centerlineHeight) {
     const totalHeight = pictures.reduce((sum, picture) => sum + picture.height, 0)
         + Math.max(0, pictures.length - 1) * distanceBetween;
