@@ -176,7 +176,7 @@
         let pictures = [];
         let unit = "inches";
         let editingIndex = null;
-        let multiplier, museumHeight, unitAbbreviated;
+        let multiplier, museumHeight;
         let mouseDownInsidePopover = false;
 
         $(document).ready(function () {
@@ -290,10 +290,8 @@
 
             if (unit === "inches") {
                 multiplier = 6;
-                unitAbbreviated = "in";
             } else {
                 multiplier = 2.25;
-                unitAbbreviated = "cm";
             }
             museumHeight = centerlineHeights[unit];
             $('#pictureDisplay').addClass(`h-[${museumHeight * 2 * multiplier}px]`);
@@ -373,8 +371,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                                 </svg>
                             </div>
-                            <div class="absolute bottom-2 text-xs text-slate-400">${picture.width}${unitAbbreviated}</div>
-                            <div class="absolute right-2 text-xs text-slate-400">${picture.height}${unitAbbreviated}</div>
+                            <div class="absolute bottom-2 text-xs text-slate-400 whitespace-nowrap">${formatNailHeight(picture.width, unit)}</div>
+                            <div class="absolute right-2 text-xs text-slate-400 whitespace-nowrap">${formatNailHeight(picture.height, unit)}</div>
                             <div class="absolute transition ease-in-out duration-150 -top-2 -right-2 rounded-full cursor-pointer bg-slate-200 text-red-400 p-1 js-remove-btn opacity-0 group-hover:opacity-100 hover:bg-red-400 hover:text-slate-100" data-index="${index}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" class="w-4 h-4">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
