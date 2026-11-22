@@ -171,7 +171,7 @@
 
     <!-- JavaScript Logic -->
     <script type="module">
-        import { calculateLayout, centerlineHeights, defaultDistanceBetween, layoutParams, rounded } from '/layout.mjs';
+        import { calculateLayout, centerlineHeights, defaultDistanceBetween, formatNailHeight, layoutParams, rounded } from '/layout.mjs';
 
         let pictures = [];
         let unit = "inches";
@@ -389,7 +389,7 @@
                         <div class="absolute top-[${picture.hangingNailHeight * multiplier}px] left-[${(picture.width * multiplier) + 35}px]">
                             <div class="absolute -right-20 text-xs bg-white p-2 opacity-60 group-hover:opacity-100 text-slate-400">
                                 <div>Nail Height</div>
-                                <div>${nailHeight}${unitAbbreviated}</div>
+                                <div class="whitespace-nowrap" title="${unit === 'inches' ? 'Rounded to the nearest 1/16 inch' : ''}">${formatNailHeight(nailHeight, unit)}</div>
                             </div>
                             <div class="absolute right-0 border-r border-slate-300 group-hover:border-slate-900" style="height: ${nailHeight * multiplier}px;"></div>
                         </div>
